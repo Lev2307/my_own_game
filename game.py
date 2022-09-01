@@ -12,7 +12,7 @@ class Game(tk.Tk):
         self.canvas = tk.Canvas(width=CANVAS_SIZE, height=CANVAS_SIZE, bg=BG_COLOR)
         self.canvas.pack()
         self.player_pos = [(0, 0)]
-        self.direction = 'Right'
+        self.direction = ''
         self.score = 0
         self.canvas_width = CANVAS_SIZE
         self.apple_pos = self.place_apple()
@@ -28,10 +28,10 @@ class Game(tk.Tk):
         
         # score text
         self.canvas.create_text(560, 580, text=f"Score: {self.score}", tag="score", fill="#fff", font=10)
-        pos_x, pos_y = self.apple_pos
-        print(pos_x, pos_y)
 
         #apple
+        pos_x, pos_y = self.apple_pos
+        print(pos_x, pos_y)
         self.canvas.create_rectangle(pos_x, pos_y, pos_x+RECT_SIZE, pos_y+RECT_SIZE, fill='#f85959', outline='#f85959', tag="apple")
 
     def change_player_direction(self, event):
@@ -93,6 +93,7 @@ class Game(tk.Tk):
             self.score += 1
             self.player_pos.append(self.player_pos[-1])
             self.apple_pos = self.place_apple()
+            
             pos_x, pos_y = self.apple_pos
             self.canvas.coords(self.canvas.find_withtag("apple"), pos_x, pos_y, pos_x+RECT_SIZE, pos_y+RECT_SIZE)
 
