@@ -3,8 +3,9 @@ from random import randint
 import time
 
 CANVAS_SIZE = 600
-RECT_SIZE = 600 // 20
+RECT_SIZE = CANVAS_SIZE // 20
 BG_COLOR = '#ff9f68'
+CENTER = CANVAS_SIZE / 2
 
 class Game(tk.Tk):
     def __init__(self):
@@ -111,7 +112,7 @@ class Game(tk.Tk):
 
     def end_window(self):
         self.canvas.delete(tk.ALL)
-        self.canvas.create_text(CANVAS_SIZE // 2, CANVAS_SIZE // 2, text=f'Your final score is {self.score}', font="Verdana 16", fill='#fff')
+        self.canvas.create_text(CENTER, CENTER, text=f'Your final score is {self.score}', font="Verdana 16", fill='#fff')
 
 
 game = Game()
