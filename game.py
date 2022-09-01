@@ -6,46 +6,33 @@ CANVAS_SIZE = 600
 RECT_SIZE = 600 // 20
 BG_COLOR = '#ff9f68'
 
-class Board(tk.Tk):
+class Game(tk.Tk):
     def __init__(self):
         super().__init__()
         self.canvas = tk.Canvas(width=CANVAS_SIZE, height=CANVAS_SIZE, bg=BG_COLOR)
         self.canvas.pack()
-
-board = Board()
-board.title('Snake Game')
-
-class Apple:
-    def __init__(self):
-        self.canvas = board.canvas
-        self.canvas_width = CANVAS_SIZE
-
-apple = Apple()
-
-class Player:
-    def __init__(self):
-        self.canvas = board.canvas
         self.player_pos = [(0, 0)]
-        self.x = 0
-        self.y = 0
         self.direction = 'Right'
         self.score = 0
-        self.player = self.render_player()
         self.canvas_width = CANVAS_SIZE
         self.apple_pos = self.place_apple()
         self.render_objects()
         self.canvas.bind_all('<KeyPress>', self.change_player_direction)
     
     def render_objects(self):
-        self.canvas.create_text(560, 580, text=f"Score: {self.score}", tag="score", fill="#fff", font=10)
-        pos_x, pos_y = self.apple_pos
-        print(pos_x, pos_y)
-        self.canvas.create_rectangle(pos_x, pos_y, pos_x+RECT_SIZE, pos_y+RECT_SIZE, fill='#f85959', outline='#f85959', tag="apple")
-    def render_player(self):
+        #player
         rect_size = RECT_SIZE
         x = 0
         y = 0
-        return self.canvas.create_rectangle(x, y, x+rect_size,  y+rect_size, fill='#17b978', outline='#17b978', tag='snake')
+        self.canvas.create_rectangle(x, y, x+rect_size,  y+rect_size, fill='#17b978', outline='#17b978', tag='snake')
+        
+        # score text
+        self.canvas.create_text(560, 580, text=f"Score: {self.score}", tag="score", fill="#fff", font=10)
+        pos_x, pos_y = self.apple_pos
+        print(pos_x, pos_y)
+
+        #apple
+        self.canvas.create_rectangle(pos_x, pos_y, pos_x+RECT_SIZE, pos_y+RECT_SIZE, fill='#f85959', outline='#f85959', tag="apple")
 
     def change_player_direction(self, event):
         head_x_position, head_y_position = self.player_pos[0]
@@ -126,8 +113,8 @@ class Player:
         self.canvas.create_text(CANVAS_SIZE // 2, CANVAS_SIZE // 2, text=f'Your final score is {self.score}', font="Verdana 16", fill='#fff')
 
 
-player = Player()
+game = Game()
 while True:
-    move = player.move()
-    board.update()
+    move = game.move()
+    game.update()
     time.sleep(0.1)
