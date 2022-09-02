@@ -1,6 +1,7 @@
 import tkinter as tk
 from random import randint
 import time
+from turtle import pos
 
 CANVAS_SIZE = 600
 RECT_SIZE = CANVAS_SIZE // 20
@@ -54,6 +55,9 @@ class Game(tk.Tk):
             new_head_position = (head_x_position - RECT_SIZE, head_y_position)
 
         self.player_pos = [new_head_position] + self.player_pos[:-1]
+        for snake, position in zip(self.canvas.find_withtag("snake"), self.player_pos):
+            pos_x, pos_y = position
+            self.canvas.coords(snake, pos_x, pos_y, pos_x+RECT_SIZE, pos_y+RECT_SIZE)
     def move(self):
         pos = self.player_pos
         apple_eaten = self.check_apple_eaten()
@@ -61,42 +65,44 @@ class Game(tk.Tk):
             if pos[0][1] < 0:
                 self.end_window()
             if apple_eaten:
-                self.check_apple_collision()
+                self.apple_collision()
         elif self.direction == 'Down':
             if pos[0][1] > CANVAS_SIZE:
                 self.end_window()
             if apple_eaten:
-                self.check_apple_collision()
+                self.apple_collision()
         elif self.direction == 'Right':
             if pos[0][0] > CANVAS_SIZE:
                 self.end_window()
             if apple_eaten:
-                self.check_apple_collision()
+                self.apple_collision()
         elif self.direction == 'Left':
             if pos[0][0] < 0:
                 self.end_window()
             if apple_eaten:
-                self.check_apple_collision()
+                self.apple_collision()
 
     def place_apple(self):
         rect_size = RECT_SIZE
-        field_size = self.canvas_width // rect_size + 1
-        row = randint(0, field_size-3)
-        col = randint(0, field_size-2)
+        row = randint(0, 18)
+        col = randint(0, 19)
         x = row * rect_size
         y = col * rect_size
         apple_pos_placed = (x, y)
         if apple_pos_placed not in self.player_pos:
             return apple_pos_placed
             
-    def check_apple_collision(self):
+    def apple_collision(self):
         if self.player_pos[0] == self.apple_pos:
             self.score += 1
             self.player_pos.append(self.player_pos[-1])
             self.apple_pos = self.place_apple()
+
+            pos_x_player, pos_y_player = self.player_pos[-1]
+            self.canvas.create_rectangle(pos_x_player, pos_y_player, pos_x_player+RECT_SIZE, pos_y_player+RECT_SIZE, fill='#17b978', outline='#17b978', tag='snake')
             
-            pos_x, pos_y = self.apple_pos
-            self.canvas.coords(self.canvas.find_withtag("apple"), pos_x, pos_y, pos_x+RECT_SIZE, pos_y+RECT_SIZE)
+            pos_x_apple, pos_y_apple = self.apple_pos
+            self.canvas.coords(self.canvas.find_withtag("apple"), pos_x_apple, pos_y_apple, pos_x_apple+RECT_SIZE, pos_y_apple+RECT_SIZE)
 
             score = self.canvas.find_withtag("score")
             self.canvas.itemconfigure(score, text=f"Score: {self.score}", tag="score")
@@ -119,4 +125,3 @@ game = Game()
 while True:
     move = game.move()
     game.update()
-    time.sleep(0.1)
